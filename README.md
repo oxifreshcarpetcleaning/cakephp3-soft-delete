@@ -4,8 +4,11 @@
 
 ## Purpose
 
-This Cakephp plugin enables you to make your models soft deletable by instead marking an active
+This Cakephp plugin enables you to make your models soft deletable by marking an active
 flag on the model "false".
+
+Based on the original version by PGBI: https://github.com/PGBI/cakephp3-soft-delete which
+uses `deleted` dates instead of active flags.
 
 ## Requirements
 

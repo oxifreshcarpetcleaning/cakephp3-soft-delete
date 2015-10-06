@@ -12,7 +12,7 @@ uses `deleted` dates instead of active flags.
 
 ## Requirements
 
-This plugins has been developped for cakephp 3.x.
+This plugins has been developed for cakephp 3.x.
 
 ## Installation
 

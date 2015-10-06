@@ -19,7 +19,7 @@ trait SoftDeleteTrait {
         if (isset($this->softDeleteField)) {
             $field = $this->softDeleteField;
         } else {
-            $field = 'deleted';
+            $field = 'active';
         }
 
         if ($this->schema()->column($field) === null) {
@@ -84,7 +84,7 @@ trait SoftDeleteTrait {
         $query = $this->query();
         $conditions = (array)$entity->extract($primaryKey);
         $statement = $query->update()
-            ->set([$this->getSoftDeleteField() => date('Y-m-d H:i:s')])
+            ->set([$this->getSoftDeleteField() => 0])
             ->where($conditions)
             ->execute();
 
@@ -109,7 +109,7 @@ trait SoftDeleteTrait {
     {
         $query = $this->query()
             ->update()
-            ->set([$this->getSoftDeleteField() => date('Y-m-d H:i:s')])
+            ->set([$this->getSoftDeleteField() => 0])
             ->where($conditions);
         $statement = $query->execute();
         $statement->closeCursor();
@@ -138,24 +138,6 @@ trait SoftDeleteTrait {
         }
 
         return $success;
-    }
-
-    /**
-     * Hard deletes all records that were soft deleted before a given date.
-     * @param \DateTime $until Date until witch soft deleted records must be hard deleted.
-     * @return int number of affected rows.
-     */
-    public function hardDeleteAll(\Datetime $until)
-    {
-        $query = $this->query()
-            ->delete()
-            ->where([
-                $this->getSoftDeleteField() . ' IS NOT NULL',
-                $this->getSoftDeleteField() . ' <=' => $until->format('Y-m-d H:i:s')
-            ]);
-        $statement = $query->execute();
-        $statement->closeCursor();
-        return $statement->rowCount();
     }
 
 }

@@ -1,10 +1,11 @@
-# CakeSoftDelete plugin for CakePHP
+# Alternative CakeSoftDelete Plugin for CakePHP
 
 [![Build status](https://api.travis-ci.org/PGBI/cakephp3-soft-delete.png?branch=master)](https://travis-ci.org/PGBI/cakephp3-soft-delete)
 
 ## Purpose
 
-This Cakephp plugin enables you to make your models soft deletable.
+This Cakephp plugin enables you to make your models soft deletable by instead marking an active
+flag on the model "false".
 
 ## Requirements
 
@@ -17,7 +18,7 @@ You can install this plugin into your CakePHP application using [composer](http:
 Update your composer file to include this plugin:
 
 ```
-composer require pgbi/cakephp3-soft-delete "dev-master"
+composer require oxifreshcarpetcleaning/cakephp3-soft-delete "dev-master"
 ```
 
 ## Configuration
@@ -61,17 +62,17 @@ class UsersTable extends Table
 
 ### Soft deleting records
 
-`delete` and `deleteAll` functions will now soft delete records by populating `deleted` field with the date of the deletion.
+`delete` function will now soft delete records by setting an `active` flag field from `1` (active) to `0` (inactive).
 
 ### Finding records
 
-`find`, `get` or dynamic finders (such as `findById`) will only return non soft deleted records.
-To also return soft deleted records, `$options` must contain `'withDeleted'`. Example:
+`find`, `get` or dynamic finders (such as `findById`) will only return active records.
+To also return soft deleted records, `$options` must contain `'withInactive'`. Example:
 
 ```
 // in src/Model/Table/UsersTable.php
 $nonSoftDeletedRecords = $this->find('all');
-$allRecords            = $this->find('all', ['withDeleted']);
+$allRecords            = $this->find('all', ['withInactive']);
 ```
 
 ### Hard deleting records
@@ -81,14 +82,6 @@ To hard delete a single entity:
 // in src/Model/Table/UsersTable.php
 $user = $this->get($userId);
 $success = $this->hardDelete($user);
-```
-
-To mass hard delete records that were soft deleted before a given date, you can use hardDeleteAll($date):
-
-```
-// in src/Model/Table/UsersTable.php
-$date = new \DateTime('some date');
-$affectedRowsCount = $this->hardDeleteAll($date);
 ```
 
 ## Soft deleting & associations

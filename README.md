@@ -93,3 +93,11 @@ Associations are correctly handled by SoftDelete plugin.
 
 1. Soft deletion will be cascaded to related models as usual. If related models also use SoftDelete Trait, they will be soft deleted.
 2. Soft deletes records will be excluded from counter cache.
+
+## Un-deleting (reactivating) records
+To hard delete a single entity:
+```
+// in src/Model/Table/UsersTable.php
+$user = $this->get($userId);
+$success = $this->activate($user);
+```

@@ -140,4 +140,22 @@ trait SoftDeleteTrait {
         return $success;
     }
 
+    public function activate(EntityInterface $entity){
+      $primaryKey = (array)$this->primaryKey();
+      $query = $this->query();
+      $conditions = (array)$entity->extract($primaryKey);
+      $statement = $query->update()
+          ->set(['active'=>1])
+          ->where($conditions)
+          ->execute();
+
+      $success = $statement->rowCount() > 0;
+      if (!$success) {
+          return $success;
+      }
+
+      return $success;
+    }
+
+
 }

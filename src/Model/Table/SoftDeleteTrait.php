@@ -140,6 +140,7 @@ trait SoftDeleteTrait {
         return $success;
     }
 
+
     public function activate(EntityInterface $entity){
       $primaryKey = (array)$this->primaryKey();
       $query = $this->query();
@@ -156,6 +157,7 @@ trait SoftDeleteTrait {
 
       return $success;
     }
+
 
 
 }

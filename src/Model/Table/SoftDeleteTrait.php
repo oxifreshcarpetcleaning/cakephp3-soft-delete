@@ -34,11 +34,6 @@ trait SoftDeleteTrait {
         return $field;
     }
 
-    public function query()
-    {
-        return new Query($this->connection(), $this);
-    }
-
     /**
      * Perform the delete operation.
      *
@@ -158,6 +153,23 @@ trait SoftDeleteTrait {
       return $success;
     }
 
+    /**
+     * Return inactive entities - these do exist even if they are "not active"
+     * @param array|\ArrayAccess $conditions
+     *
+     * @return bool
+     */
+    public function exists($conditions)
+    {
+        return (bool)count(
+            $this->find('all', ['withInactive'])
+                 ->select(['existing' => 1])
+                 ->where($conditions)
+                 ->limit(1)
+                 ->hydrate(false)
+                 ->toArray()
+        );
+    }
 
 
 }

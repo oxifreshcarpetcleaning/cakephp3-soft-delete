@@ -6,7 +6,8 @@ use Cake\Datasource\EntityInterface;
 use SoftDelete\Error\MissingColumnException;
 use SoftDelete\ORM\Query;
 
-trait SoftDeleteTrait {
+trait SoftDeleteTrait
+{
 
     /**
      * Get the configured deletion field
@@ -84,6 +85,8 @@ trait SoftDeleteTrait {
             ->execute();
 
         $success = $statement->rowCount() > 0;
+
+        $entity->{$this->getSoftDeleteField()} = 0;
         if (!$success) {
             return $success;
         }
@@ -117,7 +120,7 @@ trait SoftDeleteTrait {
      */
     public function hardDelete(EntityInterface $entity)
     {
-        if(!$this->delete($entity)) {
+        if (!$this->delete($entity)) {
             return false;
         }
         $primaryKey = (array)$this->primaryKey();
@@ -136,21 +139,24 @@ trait SoftDeleteTrait {
     }
 
 
-    public function activate(EntityInterface $entity){
-      $primaryKey = (array)$this->primaryKey();
-      $query = $this->query();
-      $conditions = (array)$entity->extract($primaryKey);
-      $statement = $query->update()
-          ->set(['active'=>1])
-          ->where($conditions)
-          ->execute();
+    public function activate(EntityInterface $entity)
+    {
+        $primaryKey = (array)$this->primaryKey();
+        $query = $this->query();
+        $conditions = (array)$entity->extract($primaryKey);
+        $statement = $query->update()
+            ->set([$this->getSoftDeleteField() => 1])
+            ->where($conditions)
+            ->execute();
 
-      $success = $statement->rowCount() > 0;
-      if (!$success) {
-          return $success;
-      }
+        $entity->{$this->getSoftDeleteField()} = 1;
 
-      return $success;
+        $success = $statement->rowCount() > 0;
+        if (!$success) {
+            return $success;
+        }
+
+        return $success;
     }
 
     /**
@@ -163,11 +169,11 @@ trait SoftDeleteTrait {
     {
         return (bool)count(
             $this->find('all', ['withInactive'])
-                 ->select(['existing' => 1])
-                 ->where($conditions)
-                 ->limit(1)
-                 ->hydrate(false)
-                 ->toArray()
+                ->select(['existing' => 1])
+                ->where($conditions)
+                ->limit(1)
+                ->hydrate(false)
+                ->toArray()
         );
     }
 

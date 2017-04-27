@@ -34,6 +34,11 @@ trait SoftDeleteTrait
 
         return $field;
     }
+    
+    public function query()
+    {
+        return new Query($this->connection(), $this);
+    }
 
     /**
      * Perform the delete operation.

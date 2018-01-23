@@ -77,18 +77,22 @@ trait SoftDeleteTrait
             ['_primary' => false] + $options->getArrayCopy()
         );
 
-        $query = $this->query();
-        $conditions = (array)$entity->extract($primaryKey);
-        $statement = $query->update()
-            ->set([$this->getSoftDeleteField() => 0])
-            ->where($conditions)
-            ->execute();
+        // If it's not already marked deleted, delete it now
+        $success = true;
+        if($entity->{$this->getSoftDeleteField()} != 0) {
+            $query = $this->query();
+            $conditions = (array)$entity->extract($primaryKey);
+            $statement = $query->update()
+                ->set([$this->getSoftDeleteField() => 0])
+                ->where($conditions)
+                ->execute();
 
-        $success = $statement->rowCount() > 0;
+            $success = $statement->rowCount() > 0;
 
-        $entity->{$this->getSoftDeleteField()} = 0;
-        if (!$success) {
-            return $success;
+            $entity->{$this->getSoftDeleteField()} = 0;
+            if (!$success) {
+                return $success;
+            }
         }
 
         $this->dispatchEvent('Model.afterDelete', [

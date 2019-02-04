@@ -6,7 +6,7 @@ use Cake\Datasource\EntityInterface;
 use SoftDelete\Error\MissingColumnException;
 use SoftDelete\ORM\Query;
 
-trait SoftDeleteTrait
+trait SoftDeleteNoQueryTrait
 {
 
     /**

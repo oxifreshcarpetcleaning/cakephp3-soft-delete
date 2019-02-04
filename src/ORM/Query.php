@@ -24,10 +24,13 @@ class Query extends CakeQuery
 
             $repository = $this->repository();
             $options = $this->getOptions();
-            
+
             if (!is_array($options) || !in_array('withDeleted', $options)) {
-                $aliasedField = $repository->aliasField($repository->getSoftDeleteField());
-                $this->andWhere($aliasedField . ' = 1');
+                $ignoredTables = ['LastModifiedByEmployees', 'CreatedByEmployees'];
+                if (!in_array($repository->getRegistryAlias(), $ignoredTables)) {
+                    $aliasedField = $repository->aliasField($repository->getSoftDeleteField());
+                    $this->andWhere($aliasedField . ' = 1');
+                }
             }
         }
     }

@@ -180,12 +180,4 @@ trait SoftDeleteNoQueryTrait
                 ->toArray()
         );
     }
-
-    /**
-     * @return \SoftDelete\ORM\Query
-     */
-    public function query()
-    {
-        return new Query($this->getConnection(), $this);
-    }
 }

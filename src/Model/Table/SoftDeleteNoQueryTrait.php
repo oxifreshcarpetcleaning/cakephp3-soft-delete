@@ -23,7 +23,7 @@ trait SoftDeleteNoQueryTrait
             $field = 'active';
         }
 
-        if ($this->schema()->column($field) === null) {
+        if ($this->getSchema()->getColumn($field) === null) {
             throw new MissingColumnException(
                 __('Configured field `{0}` is missing from the table `{1}`.',
                     $field,

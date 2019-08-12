@@ -53,7 +53,7 @@ trait SoftDeleteNoQueryTrait
             return false;
         }
 
-        $primaryKey = (array)$this->primaryKey();
+        $primaryKey = (array)$this->getPrimaryKey();
         if (!$entity->has($primaryKey)) {
             $msg = 'Deleting requires all primary key values.';
             throw new \InvalidArgumentException($msg);
@@ -176,7 +176,7 @@ trait SoftDeleteNoQueryTrait
                 ->select(['existing' => 1])
                 ->where($conditions)
                 ->limit(1)
-                ->hydrate(false)
+                ->disableHydration()
                 ->toArray()
         );
     }

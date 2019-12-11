@@ -172,7 +172,7 @@ trait SoftDeleteNoQueryTrait
     public function exists($conditions)
     {
         return (bool)count(
-            $this->find('all', ['withInactive'])
+            $this->find('all', ['withDeleted' => true])
                 ->select(['existing' => 1])
                 ->where($conditions)
                 ->limit(1)
